@@ -1,0 +1,261 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "API de Clientes y Préstamos"
+  description: "Documentación de la API para la gestión de clientes y préstamos."
+  termsOfService: "http://example.com/terms/"
+  contact:
+    name: "Soporte API"
+    email: "soporte@example.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+
+host: "localhost:8080"
+basePath: "/api"
+schemes:
+  - "http"
+
+tags:
+  - name: "ClienteController"
+    description: "Operaciones relacionadas con clientes"
+  - name: "PrestamoController"
+    description: "Operaciones relacionadas con préstamos"
+
+paths:
+  /clientes:
+    get:
+      tags:
+        - "ClienteController"
+      summary: "Obtener lista de clientes"
+      description: "Devuelve una lista de todos los clientes registrados."
+      responses:
+        200:
+          description: "Lista de clientes"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Cliente"
+
+    post:
+      tags:
+        - "ClienteController"
+      summary: "Crear un nuevo cliente"
+      description: "Registra un nuevo cliente en el sistema."
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/ClienteCreateDTO"
+      responses:
+        201:
+          description: "Cliente creado exitosamente."
+
+  /clientes/{id}:
+    put:
+      tags:
+        - "ClienteController"
+      summary: "Actualizar un cliente existente"
+      description: "Actualiza los datos de un cliente específico."
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/ClienteUpdateDTO"
+      responses:
+        200:
+          description: "Cliente actualizado exitosamente."
+
+    delete:
+      tags:
+        - "ClienteController"
+      summary: "Eliminar un cliente"
+      description: "Elimina un cliente por su ID."
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+      responses:
+        204:
+          description: "Cliente eliminado exitosamente."
+
+  /clientes/{id}/accion:
+    get:
+      tags:
+        - "ClienteController"
+      summary: "Realizar acción por tipo de cliente"
+      description: "Realiza una acción dependiendo del tipo de cliente."
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Acción realizada exitosamente."
+          schema:
+            type: "string"
+
+  /prestamos:
+    get:
+      tags:
+        - "PrestamoController"
+      summary: "Obtener lista de préstamos activos"
+      description: "Devuelve una lista de todos los préstamos activos registrados."
+      responses:
+        200:
+          description: "Lista de préstamos"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/PrestamoDTO"
+
+    post:
+      tags:
+        - "PrestamoController"
+      summary: "Crear un nuevo préstamo"
+      description: "Registra un nuevo préstamo para un cliente."
+      parameters:
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/PrestamoCreateDTO"
+      responses:
+        201:
+          description: "Préstamo creado exitosamente."
+
+  /prestamos/{id}:
+    put:
+      tags:
+        - "PrestamoController"
+      summary: "Actualizar un préstamo existente"
+      description: "Actualiza los datos de un préstamo específico."
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/PrestamoUpdateDTO"
+      responses:
+        200:
+          description: "Préstamo actualizado exitosamente."
+
+    delete:
+      tags:
+        - "PrestamoController"
+      summary: "Eliminar un préstamo"
+      description: "Elimina un préstamo por su ID."
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+      responses:
+        204:
+          description: "Préstamo eliminado exitosamente."
+
+definitions:
+  Cliente:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      nombre:
+        type: "string"
+      email:
+        type: "string"
+      edad:
+        type: "integer"
+      tipoCliente:
+        type: "string"
+
+  ClienteCreateDTO:
+    type: "object"
+    properties:
+      nombre:
+        type: "string"
+      email:
+        type: "string"
+      edad:
+        type: "integer"
+      tipoCliente:
+        type: "string"
+
+  ClienteUpdateDTO:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      nombre:
+        type: "string"
+      email:
+        type: "string"
+      edad:
+        type: "integer"
+      tipoCliente:
+        type: "string"
+
+  PrestamoCreateDTO:
+    type: "object"
+    properties:
+      monto:
+        type: "number"
+      clienteId:
+        type: "string"
+      fecha:
+        type: "string"
+        format: "date"
+      estado:
+        type: "string"
+
+  PrestamoDTO:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      monto:
+        type: "number"
+      clienteId:
+        type: "string"
+      fecha:
+        type: "string"
+        format: "date"
+      estado:
+        type: "string"
+      montoTotal:
+        type: "number"
+
+  PrestamoUpdateDTO:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      monto:
+        type: "number"
+      clienteId:
+        type: "string"
+      fecha:
+        type: "string"
+        format: "date"
+      estado:
+        type: "string"
+
+  ErrorResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+      message:
+        type: "string"
